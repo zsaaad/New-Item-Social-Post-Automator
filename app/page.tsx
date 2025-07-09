@@ -13,6 +13,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [response, setResponse] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  
+  // Debug state changes
+  console.log('Current state:', { isLoading, response, error })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -44,11 +47,13 @@ export default function Home() {
 
       const data = await res.json()
       console.log('API Response:', data)
+      console.log('Setting response to:', data.message)
       setResponse(data.message)
     } catch (err) {
       console.error('API Error:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
+      console.log('Setting isLoading to false')
       setIsLoading(false)
     }
   }
