@@ -2,18 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Creative Studio Theme - Dark Mode */
+/* Creative Studio Theme - Navy & Orange */
 :root {
-  --background-dark: #111111;
-  --card-dark: #1E1E1E;
-  --text-primary: #F0F0F0;
-  --text-secondary: #A0A0A0;
-  --accent-primary: #39FF14; /* Vibrant Lime Green */
-  --accent-glow: rgba(57, 255, 20, 0.1);
-  --border-color: #333333;
+  --background-dark: #0B192C; /* Deepest Navy Blue */
+  --card-dark: #1E3E62;       /* Lighter Navy for cards */
+  --text-primary: #FBFBFB;    /* Off-white for primary text */
+  --text-secondary: #9CA3AF;  /* A light gray for secondary text */
+  --accent-primary: #FF6500;  /* Vibrant Orange */
+  --accent-glow: rgba(255, 101, 0, 0.15); /* Orange glow effect */
+  --border-color: #2c5a8e;    /* A brighter blue for subtle borders */
 }
 
-/* Dark Background */
+/* Navy Background */
 body {
-  background-color: #111111;
+  background-color: var(--background-dark);
 } 

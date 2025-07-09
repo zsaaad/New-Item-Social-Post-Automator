@@ -70,7 +70,7 @@ export default function GenerateImagePage() {
           <form onSubmit={handleSubmit} style={{ 
             backgroundColor: 'var(--card-dark)', 
             borderColor: 'var(--border-color)' 
-          }} className="p-6 rounded-md border shadow-[0_0_15px_var(--accent-glow)] space-y-6">
+          }} className="p-6 rounded-md border shadow-[0_0_20px_var(--accent-glow)] space-y-6">
             <div>
               <label htmlFor="prompt" style={{ color: 'var(--text-primary)' }} className="block text-sm font-medium mb-2">
                 Image Prompt
@@ -81,7 +81,7 @@ export default function GenerateImagePage() {
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 rows={4}
-                className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all resize-none"
+                className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all resize-none"
                 placeholder="Describe the image you want to generate..."
                 required
               />
@@ -96,7 +96,7 @@ export default function GenerateImagePage() {
                   id="style"
                   value={style}
                   onChange={(e) => setStyle(e.target.value)}
-                  className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
+                  className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
                 >
                   <option value="Photorealistic">Photorealistic</option>
                   <option value="Illustration">Illustration</option>
@@ -113,7 +113,7 @@ export default function GenerateImagePage() {
                   id="color"
                   value={color}
                   onChange={(e) => setColor(e.target.value)}
-                  className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
+                  className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
                 >
                   <option value="Vibrant">Vibrant</option>
                   <option value="Muted Tones">Muted Tones</option>
@@ -130,7 +130,7 @@ export default function GenerateImagePage() {
                   id="background"
                   value={background}
                   onChange={(e) => setBackground(e.target.value)}
-                  className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
+                  className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
                 >
                   <option value="Studio Backdrop">Studio Backdrop</option>
                   <option value="Outdoor Scenery">Outdoor Scenery</option>
@@ -143,7 +143,7 @@ export default function GenerateImagePage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-transparent text-[var(--accent-primary)] border-2 border-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-black transition-all font-bold py-3 px-6 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all py-3 px-6 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Generating Image...' : 'Generate Image'}
             </button>
@@ -163,7 +163,7 @@ export default function GenerateImagePage() {
               backgroundColor: 'var(--card-dark)', 
               borderColor: 'var(--border-color)',
               color: 'var(--text-primary)'
-            }} className="border p-8 rounded-md text-center shadow-[0_0_15px_var(--accent-glow)]">
+            }} className="border p-8 rounded-md text-center shadow-[0_0_20px_var(--accent-glow)]">
               <div style={{ borderColor: 'var(--accent-primary)' }} className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 mb-4"></div>
               <p className="text-lg font-medium">Creating visual mockup...</p>
               <p style={{ color: 'var(--text-secondary)' }} className="text-sm mt-2">This may take a moment</p>
@@ -174,7 +174,7 @@ export default function GenerateImagePage() {
             <div style={{ 
               backgroundColor: 'var(--card-dark)', 
               borderColor: 'var(--border-color)' 
-            }} className="border rounded-md p-6 shadow-[0_0_15px_var(--accent-glow)]">
+            }} className="border rounded-md p-6 shadow-[0_0_20px_var(--accent-glow)]">
               <h3 style={{ color: 'var(--accent-primary)' }} className="text-xl font-bold mb-4">Generated Image</h3>
               <img
                 src={`data:image/svg+xml;base64,${imageBase64}`}
@@ -186,7 +186,7 @@ export default function GenerateImagePage() {
             <div style={{ 
               backgroundColor: 'var(--card-dark)', 
               borderColor: 'var(--border-color)' 
-            }} className="border rounded-md p-8 text-center shadow-[0_0_15px_var(--accent-glow)]">
+            }} className="border rounded-md p-8 text-center shadow-[0_0_20px_var(--accent-glow)]">
               <div className="text-6xl mb-4">🎨</div>
               <h3 style={{ color: 'var(--text-primary)' }} className="text-xl font-bold mb-2">Your Generated Image</h3>
               <p style={{ color: 'var(--text-secondary)' }} className="text-sm">

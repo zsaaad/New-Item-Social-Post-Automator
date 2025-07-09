@@ -115,14 +115,14 @@ export default function HomePage() {
     <div style={{ 
       backgroundColor: 'var(--card-dark)', 
       borderColor: 'var(--border-color)' 
-    }} className="border rounded-md p-6 shadow-[0_0_15px_var(--accent-glow)] relative">
+    }} className="border rounded-md p-6 shadow-[0_0_20px_var(--accent-glow)] relative">
       <div className="flex justify-between items-start mb-4">
         <h3 style={{ color: 'var(--accent-primary)' }} className="font-bold text-lg">{title}</h3>
         <div className="flex space-x-2">
           {previewData && (
             <button
               onClick={() => handlePreview(previewData.caption, previewData.imagePrompt, previewData.postType)}
-              className="bg-transparent text-[var(--accent-primary)] border-2 border-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-black transition-all text-sm px-4 py-1 rounded-md font-medium"
+              className="bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all text-sm px-4 py-1 rounded-md"
             >
               Preview ✨
             </button>
@@ -160,7 +160,7 @@ export default function HomePage() {
           <form onSubmit={handleSubmit} style={{ 
             backgroundColor: 'var(--card-dark)', 
             borderColor: 'var(--border-color)' 
-          }} className="p-6 rounded-md border shadow-[0_0_15px_var(--accent-glow)] space-y-6">
+          }} className="p-6 rounded-md border shadow-[0_0_20px_var(--accent-glow)] space-y-6">
             <div>
               <label htmlFor="newItemName" style={{ color: 'var(--text-primary)' }} className="block text-sm font-medium mb-2">New Item Name</label>
               <input 
@@ -169,7 +169,7 @@ export default function HomePage() {
                 id="newItemName" 
                 value={formData.newItemName} 
                 onChange={handleInputChange} 
-                className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
+                className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
               />
             </div>
             <div>
@@ -180,7 +180,7 @@ export default function HomePage() {
                 value={formData.itemDescription} 
                 onChange={handleInputChange} 
                 rows={4} 
-                className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all resize-none"
+                className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all resize-none"
               />
             </div>
             <div>
@@ -191,7 +191,7 @@ export default function HomePage() {
                 id="price" 
                 value={formData.price} 
                 onChange={handleInputChange} 
-                className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
+                className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
               />
             </div>
             <div>
@@ -202,13 +202,13 @@ export default function HomePage() {
                 id="strategicInput" 
                 value={formData.strategicInput} 
                 onChange={handleInputChange} 
-                className="w-full bg-black border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
+                className="w-full bg-black/50 border border-[var(--border-color)] rounded-md p-3 text-[var(--text-primary)] focus:ring-2 focus:ring-[var(--accent-primary)] focus:border-transparent outline-none transition-all"
               />
             </div>
             <button 
               type="submit" 
               disabled={loading} 
-              className="w-full bg-transparent text-[var(--accent-primary)] border-2 border-[var(--accent-primary)] hover:bg-[var(--accent-primary)] hover:text-black transition-all font-bold py-3 px-6 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all py-3 px-6 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Generating...' : 'Generate Campaign'}
             </button>
@@ -269,7 +269,7 @@ export default function HomePage() {
             <div style={{ 
               backgroundColor: 'var(--card-dark)', 
               borderColor: 'var(--border-color)' 
-            }} className="border rounded-md p-8 text-center shadow-[0_0_15px_var(--accent-glow)]">
+            }} className="border rounded-md p-8 text-center shadow-[0_0_20px_var(--accent-glow)]">
               <div className="text-6xl mb-4">🎨</div>
               <h3 style={{ color: 'var(--text-primary)' }} className="text-xl font-bold mb-2">Your Creative Output</h3>
               <p style={{ color: 'var(--text-secondary)' }} className="text-sm">
