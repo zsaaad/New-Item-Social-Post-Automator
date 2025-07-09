@@ -5,12 +5,6 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '')
 
 export async function POST(request: NextRequest) {
-  // Declare variables outside try block for broader scope
-  let newItemName = ''
-  let newItemDescription = ''
-  let newItemPrice = ''
-  let strategicInput = ''
-  
   try {
     // Parse the incoming JSON body
     const body = await request.json()
@@ -28,11 +22,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Extract all four required fields
-    const extracted = body
-    newItemName = extracted.newItemName || ''
-    newItemDescription = extracted.newItemDescription || ''
-    newItemPrice = extracted.newItemPrice || ''
-    strategicInput = extracted.strategicInput || ''
+    const { newItemName, newItemDescription, newItemPrice, strategicInput } = body
     
     // Validate required fields
     if (!newItemName || !newItemDescription || !newItemPrice || !strategicInput) {
@@ -110,8 +100,17 @@ Respond with ONLY valid JSON in this exact format:
         parseError: parseError instanceof Error ? parseError.message : 'Unknown parse error'
       }, { status: 500 })
     }
-  } catch (error) {
-    console.error('Error processing request:', error)
+  } } catch (error) {
+    console.error("--- ERROR DURING AI GENERATION ---", error);
+  
+    // This is the corrected, type-safe error handling
+    let errorMessage = "An unknown error occurred.";
+    if (error instanceof Error) {
+        errorMessage = error.message;
+    }
+  
+    return NextResponse.json({ error: "Failed to generate AI content.", details: errorMessage }, { status: 500 });
+  }
     
     // Temporary fallback for demo purposes
     const fallbackContentPack = {
