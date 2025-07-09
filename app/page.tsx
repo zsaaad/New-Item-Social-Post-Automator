@@ -43,8 +43,10 @@ export default function Home() {
       }
 
       const data = await res.json()
+      console.log('API Response:', data)
       setResponse(data.message)
     } catch (err) {
+      console.error('API Error:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setIsLoading(false)
