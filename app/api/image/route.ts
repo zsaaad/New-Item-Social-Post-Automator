@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     });
 
     // 5. Extract the image URL from the response
-    const imageUrl = response.data[0]?.url;
+    const imageUrl = response.data?.[0]?.url;
     if (!imageUrl) {
       throw new Error("No image URL received from DALL-E API");
     }
