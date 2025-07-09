@@ -5,6 +5,12 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '')
 
 export async function POST(request: NextRequest) {
+  // Declare variables outside try block for broader scope
+  let newItemName = ''
+  let newItemDescription = ''
+  let newItemPrice = ''
+  let strategicInput = ''
+  
   try {
     // Parse the incoming JSON body
     const body = await request.json()
@@ -22,7 +28,11 @@ export async function POST(request: NextRequest) {
     }
     
     // Extract all four required fields
-    const { newItemName, newItemDescription, newItemPrice, strategicInput } = body
+    const extracted = body
+    newItemName = extracted.newItemName || ''
+    newItemDescription = extracted.newItemDescription || ''
+    newItemPrice = extracted.newItemPrice || ''
+    strategicInput = extracted.strategicInput || ''
     
     // Validate required fields
     if (!newItemName || !newItemDescription || !newItemPrice || !strategicInput) {
