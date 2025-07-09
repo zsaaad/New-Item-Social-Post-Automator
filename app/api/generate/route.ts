@@ -12,6 +12,15 @@ export async function POST(request: NextRequest) {
     // Log the incoming data to console
     console.log('Received form data:', body)
     
+    // Check if API key is available
+    if (!process.env.GOOGLE_API_KEY) {
+      console.error('GOOGLE_API_KEY environment variable is not set')
+      return NextResponse.json(
+        { error: 'Google API key not configured' },
+        { status: 500 }
+      )
+    }
+    
     // Extract all four required fields
     const { newItemName, newItemDescription, newItemPrice, strategicInput } = body
     
@@ -24,70 +33,71 @@ export async function POST(request: NextRequest) {
     }
     
     // Create the advanced Strategic Content Partner prompt
-    const prompt = `You are an expert F&B Social Media Strategist and Strategic Content Partner. Your task is to generate a complete "Instant Content Pack" for a new product launch.
+    const prompt = `You are an expert F&B Social Media Strategist. Create a content pack for a new product launch.
 
-PRODUCT DETAILS:
-- New Item Name: "${newItemName}"
-- Description: "${newItemDescription}"
-- Price: "${newItemPrice}"
-- Strategic Bestselling Item: "${strategicInput}"
+PRODUCT INFO:
+New Item: "${newItemName}"
+Description: "${newItemDescription}"
+Price: "${newItemPrice}"
+Bestselling Item: "${strategicInput}"
 
-INSTRUCTIONS:
-1. Use the Strategic Bestselling Item ("${strategicInput}") to inform your Strategic Upsell Post and Actionable Launch Promotion
-2. Create content that leverages the success of the bestselling item to promote the new product
-3. Generate platform-specific content optimized for each social media platform
-4. Focus on F&B industry best practices and consumer psychology
+IMPORTANT: Use the bestselling item to create strategic promotions and upsells.
 
-You MUST respond with ONLY a valid JSON object (no other text) with this exact structure:
+Respond with ONLY valid JSON in this exact format:
 
 {
   "launchPromotion": {
     "title": "Actionable Launch Promotion",
-    "content": "A single, clear sentence suggesting a launch promotion that connects the new item with the bestselling item strategy."
+    "content": "A promotion idea connecting the new item with the bestselling item."
   },
   "instagramPost": {
     "title": "Instagram Announcement Post",
-    "caption": "A punchy, visually-oriented caption for Instagram that highlights the new product's key benefits.",
-    "hashtags": "#relevant #hashtags #for #instagram",
-    "imagePrompt": "A descriptive prompt for an AI image generator to create the perfect Instagram post visual."
+    "caption": "Instagram caption highlighting key benefits",
+    "hashtags": "#relevant #hashtags",
+    "imagePrompt": "Image description for AI generator"
   },
   "facebookPost": {
     "title": "Facebook Engagement Post",
-    "caption": "A longer, more detailed caption for Facebook that tells a story and ends with an engaging question to drive comments.",
-    "hashtags": "#facebook #optimized #hashtags",
-    "imagePrompt": "A unique, descriptive image AI prompt specifically designed for Facebook's format and audience."
+    "caption": "Facebook caption with engaging question",
+    "hashtags": "#facebook #hashtags",
+    "imagePrompt": "Facebook image description"
   },
   "upsellPost": {
     "title": "Strategic Upsell Post",
-    "caption": "A caption that creates a compelling combo deal or cross-promotion between the new item (${newItemName}) and the strategic bestseller (${strategicInput}).",
-    "hashtags": "#upsell #combo #deal #hashtags",
-    "imagePrompt": "An image prompt showing both the new item and bestselling item together in an appealing way."
+    "caption": "Combo deal between ${newItemName} and ${strategicInput}",
+    "hashtags": "#combo #deal #hashtags",
+    "imagePrompt": "Image showing both items together"
   }
-}
-
-Generate the complete content pack now:`
+}`
     
     // Get the Gemini model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" })
     
     // Call Gemini model
+    console.log('Calling Gemini model...')
     const result = await model.generateContent(prompt)
     const response = await result.response
     
     // Extract the text from the response
     const aiResponse = response.text() || 'No response generated'
+    console.log('Raw AI response:', aiResponse)
     
     // Parse the JSON response from Gemini
     try {
       const contentPack = JSON.parse(aiResponse)
+      console.log('Successfully parsed content pack:', contentPack)
       
       // Return the structured content pack
       return NextResponse.json(contentPack)
     } catch (parseError) {
+      console.error('JSON parsing error:', parseError)
+      console.error('Raw response that failed to parse:', aiResponse)
+      
       // If JSON parsing fails, return the raw response for debugging
       return NextResponse.json({ 
         error: 'Failed to parse AI response as JSON',
-        rawResponse: aiResponse 
+        rawResponse: aiResponse,
+        parseError: parseError instanceof Error ? parseError.message : 'Unknown parse error'
       }, { status: 500 })
     }
   } catch (error) {
