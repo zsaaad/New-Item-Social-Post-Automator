@@ -42,13 +42,16 @@ export default function Home() {
       }
 
       const data = await res.json()
+      console.log('Full API response:', data)
       
       // Check if there's an error in the response
       if (data.error) {
+        console.error('API returned error:', data.error)
         throw new Error(data.error)
       }
       
       // Set the complete content pack
+      console.log('Setting content pack:', data)
       setContentPack(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
