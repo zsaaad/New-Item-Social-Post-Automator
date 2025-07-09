@@ -2,18 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Color Palette */
+/* Creative Studio Theme - Dark Mode */
 :root {
-  --background: #F8F9FA;
-  --text-primary: #111827;
-  --text-secondary: #6B7280;
-  --accent-primary: #FBBF24; /* A nice warm yellow/gold */
-  --accent-primary-hover: #F59E0B;
-  --card-background: #FFFFFF;
-  --border-color: #E5E7EB;
+  --background-dark: #111111;
+  --card-dark: #1E1E1E;
+  --text-primary: #F0F0F0;
+  --text-secondary: #A0A0A0;
+  --accent-primary: #39FF14; /* Vibrant Lime Green */
+  --accent-glow: rgba(57, 255, 20, 0.1);
+  --border-color: #333333;
 }
 
-/* Clean, Modern Background */
+/* Dark Background */
 body {
-  background-color: #F8F9FA;
+  background-color: #111111;
 } 
