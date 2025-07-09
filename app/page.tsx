@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { playfairDisplay } from './fonts';
+import { inter } from './fonts';
 import SocialPostPreview from './components/SocialPostPreview';
 import InstagramPreview from './components/InstagramPreview';
 import FacebookPreview from './components/FacebookPreview';
@@ -116,70 +116,144 @@ export default function HomePage() {
     cardId: string;
     previewData?: { caption: string; imagePrompt: string; postType?: 'instagram' | 'facebook' | 'generic' } 
   }) => (
-    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative">
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="font-bold text-amber-400">{title}</h3>
+    <div style={{ 
+      backgroundColor: 'var(--card-background)', 
+      borderColor: 'var(--border-color)' 
+    }} className="rounded-lg p-6 border shadow-md relative">
+      <div className="flex justify-between items-start mb-3">
+        <h3 style={{ color: 'var(--accent-primary)' }} className="font-bold text-lg">{title}</h3>
         <div className="flex space-x-2">
           {previewData && (
             <button
               onClick={() => handlePreview(previewData.caption, previewData.imagePrompt, previewData.postType)}
-              className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-2 py-1 rounded transition-colors"
+              style={{ 
+                backgroundColor: 'var(--accent-primary)',
+                color: 'var(--text-primary)'
+              }}
+              className="text-sm px-3 py-1 rounded-md hover:opacity-90 transition-opacity font-medium"
             >
               Preview ✨
             </button>
           )}
           <button
             onClick={() => handleCopy(copyText, cardId)}
-            className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded transition-colors"
+            style={{ 
+              backgroundColor: 'var(--border-color)',
+              color: 'var(--text-secondary)'
+            }}
+            className="text-sm px-3 py-1 rounded-md hover:opacity-80 transition-opacity"
           >
             {copiedStates[cardId] ? 'Copied!' : 'Copy'}
           </button>
         </div>
       </div>
-      <div className="text-gray-300 whitespace-pre-wrap">{content}</div>
+      <div style={{ color: 'var(--text-primary)' }} className="whitespace-pre-wrap leading-relaxed">{content}</div>
     </div>
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 text-white">
+    <main style={{ color: 'var(--text-primary)' }} className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8">
       <div className="w-full max-w-2xl space-y-8">
         <div className="text-center">
-          <h1 className={`text-3xl sm:text-4xl font-bold ${playfairDisplay.className}`}>Strategic Post Generator</h1>
-          <p className="text-gray-400 mt-2">
+          <h1 className={`text-3xl sm:text-4xl font-bold ${inter.className}`}>Strategic Post Generator</h1>
+          <p style={{ color: 'var(--text-secondary)' }} className="mt-2">
             Transform your new products into compelling social media campaigns.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-gray-800/50 p-6 rounded-xl shadow-lg space-y-4 border border-gray-700">
+        <form onSubmit={handleSubmit} style={{ 
+          backgroundColor: 'var(--card-background)', 
+          borderColor: 'var(--border-color)' 
+        }} className="p-6 rounded-lg shadow-md space-y-4 border">
           <div>
-            <label htmlFor="newItemName" className="block text-sm font-medium text-gray-300 mb-1">New Item Name</label>
-            <input type="text" name="newItemName" id="newItemName" value={formData.newItemName} onChange={handleInputChange} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"/>
+            <label htmlFor="newItemName" style={{ color: 'var(--text-primary)' }} className="block text-sm font-medium mb-2">New Item Name</label>
+            <input 
+              type="text" 
+              name="newItemName" 
+              id="newItemName" 
+              value={formData.newItemName} 
+              onChange={handleInputChange} 
+              style={{ 
+                backgroundColor: 'var(--background)',
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-primary)'
+              }}
+              className="w-full border rounded-md p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all"
+            />
           </div>
           <div>
-            <label htmlFor="itemDescription" className="block text-sm font-medium text-gray-300 mb-1">New Item Description</label>
-            <textarea name="itemDescription" id="itemDescription" value={formData.itemDescription} onChange={handleInputChange} rows={4} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"/>
+            <label htmlFor="itemDescription" style={{ color: 'var(--text-primary)' }} className="block text-sm font-medium mb-2">New Item Description</label>
+            <textarea 
+              name="itemDescription" 
+              id="itemDescription" 
+              value={formData.itemDescription} 
+              onChange={handleInputChange} 
+              rows={4} 
+              style={{ 
+                backgroundColor: 'var(--background)',
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-primary)'
+              }}
+              className="w-full border rounded-md p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all resize-none"
+            />
           </div>
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-300 mb-1">New Item Price</label>
-            <input type="text" name="price" id="price" value={formData.price} onChange={handleInputChange} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"/>
+            <label htmlFor="price" style={{ color: 'var(--text-primary)' }} className="block text-sm font-medium mb-2">New Item Price</label>
+            <input 
+              type="text" 
+              name="price" 
+              id="price" 
+              value={formData.price} 
+              onChange={handleInputChange} 
+              style={{ 
+                backgroundColor: 'var(--background)',
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-primary)'
+              }}
+              className="w-full border rounded-md p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all"
+            />
           </div>
           <div>
-            <label htmlFor="strategicInput" className="block text-sm font-medium text-gray-300 mb-1">Strategic Input (Bestselling Item)</label>
-            <input type="text" name="strategicInput" id="strategicInput" value={formData.strategicInput} onChange={handleInputChange} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-amber-500 focus:border-amber-500"/>
+            <label htmlFor="strategicInput" style={{ color: 'var(--text-primary)' }} className="block text-sm font-medium mb-2">Strategic Input (Bestselling Item)</label>
+            <input 
+              type="text" 
+              name="strategicInput" 
+              id="strategicInput" 
+              value={formData.strategicInput} 
+              onChange={handleInputChange} 
+              style={{ 
+                backgroundColor: 'var(--background)',
+                borderColor: 'var(--border-color)',
+                color: 'var(--text-primary)'
+              }}
+              className="w-full border rounded-md p-3 focus:ring-2 focus:ring-yellow-400 focus:border-transparent outline-none transition-all"
+            />
           </div>
-          <button type="submit" disabled={loading} className="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-4 rounded-md disabled:bg-gray-500 transition-colors">
+          <button 
+            type="submit" 
+            disabled={loading} 
+            style={{ 
+              backgroundColor: loading ? 'var(--text-secondary)' : 'var(--accent-primary)',
+              color: 'var(--text-primary)'
+            }}
+            className="w-full font-bold py-3 px-4 rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             {loading ? 'Generating...' : 'Generate Campaign'}
           </button>
         </form>
 
         {error && (
-          <div className="bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-md">
+          <div style={{ 
+            backgroundColor: '#FEF2F2', 
+            borderColor: '#FECACA',
+            color: '#DC2626'
+          }} className="border p-4 rounded-md">
             <strong>Error:</strong> {error}
           </div>
         )}
 
         {result && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <ResultCard 
               title={result.launchPromotion.title} 
               content={result.launchPromotion.content} 
@@ -188,7 +262,7 @@ export default function HomePage() {
             />
             <ResultCard 
               title={result.instagramPost.title} 
-              content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.instagramPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300 transition-colors">{result.instagramPost.imagePrompt}</a></p></>}
+              content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.instagramPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }} className="underline hover:opacity-80 transition-opacity">{result.instagramPost.imagePrompt}</a></p></>}
               copyText={`Caption: ${result.instagramPost.caption}\n\nHashtags: ${result.instagramPost.hashtags}\n\nImage Prompt: ${result.instagramPost.imagePrompt}`}
               cardId="instagramPost"
               previewData={{
@@ -199,7 +273,7 @@ export default function HomePage() {
             />
             <ResultCard 
               title={result.facebookPost.title} 
-              content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.facebookPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300 transition-colors">{result.facebookPost.imagePrompt}</a></p></>}
+              content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.facebookPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }} className="underline hover:opacity-80 transition-opacity">{result.facebookPost.imagePrompt}</a></p></>}
               copyText={`Caption: ${result.facebookPost.caption}\n\nHashtags: ${result.facebookPost.hashtags}\n\nImage Prompt: ${result.facebookPost.imagePrompt}`}
               cardId="facebookPost"
               previewData={{
@@ -210,7 +284,7 @@ export default function HomePage() {
             />
             <ResultCard 
               title={result.upsellPost.title} 
-              content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.upsellPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300 transition-colors">{result.upsellPost.imagePrompt}</a></p></>}
+              content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.upsellPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }} className="underline hover:opacity-80 transition-opacity">{result.upsellPost.imagePrompt}</a></p></>}
               copyText={`Caption: ${result.upsellPost.caption}\n\nHashtags: ${result.upsellPost.hashtags}\n\nImage Prompt: ${result.upsellPost.imagePrompt}`}
               cardId="upsellPost"
               previewData={{
@@ -230,7 +304,8 @@ export default function HomePage() {
             {/* Close Button */}
             <button
               onClick={() => setIsPreviewOpen(false)}
-              className="absolute -top-4 -right-4 bg-gray-800 hover:bg-gray-700 text-white rounded-full w-8 h-8 flex items-center justify-center z-10 transition-colors"
+              style={{ backgroundColor: 'var(--card-background)' }}
+              className="absolute -top-4 -right-4 hover:opacity-80 rounded-full w-8 h-8 flex items-center justify-center z-10 transition-opacity border shadow-md"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
