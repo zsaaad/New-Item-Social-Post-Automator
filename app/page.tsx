@@ -65,7 +65,7 @@ export default function Home() {
         </div>
 
         {/* Input Form */}
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 mb-8">
+        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 mb-8" onInvalid={() => console.log('Form validation failed!')}>
           <div className="space-y-4">
             {/* New Item Name */}
             <div>
@@ -140,6 +140,7 @@ export default function Home() {
           <button
             type="submit"
             disabled={isLoading}
+            onClick={() => console.log('Button clicked!')}
             className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
           >
             {isLoading ? 'Generating...' : 'Generate Campaign'}
