@@ -5,6 +5,7 @@ import { manrope } from './fonts';
 import SocialPostPreview from './components/SocialPostPreview';
 import InstagramPreview from './components/InstagramPreview';
 import FacebookPreview from './components/FacebookPreview';
+import ImageGenerator from './components/ImageGenerator';
 
 // Define a type for the structure of the AI's response for type safety
 interface ContentPack {
@@ -33,6 +34,10 @@ export default function HomePage(): JSX.Element {
     caption: string;
     postType: 'instagram' | 'facebook' | 'generic';
   } | null>(null);
+
+  // New state variables for modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [promptForModal, setPromptForModal] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -103,6 +108,12 @@ export default function HomePage(): JSX.Element {
       postType: postType
     });
     setIsPreviewOpen(true);
+  };
+
+  // New function to handle image generation modal
+  const handleGenerateImage = (prompt: string) => {
+    setPromptForModal(prompt);
+    setIsModalOpen(true);
   };
 
   const ResultCard = ({ title, content, copyText, cardId, previewData }: { 
@@ -234,7 +245,7 @@ export default function HomePage(): JSX.Element {
               />
               <ResultCard 
                 title={result.instagramPost.title} 
-                content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.instagramPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }} className="underline hover:opacity-80 transition-opacity">{result.instagramPost.imagePrompt}</a></p></>}
+                content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.instagramPost.imagePrompt}</p><div className="mt-3"><button onClick={() => handleGenerateImage(result.instagramPost.imagePrompt)} className="bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all text-sm px-4 py-2 rounded-md">Generate Image ✨</button></div></>}
                 copyText={`Caption: ${result.instagramPost.caption}\n\nHashtags: ${result.instagramPost.hashtags}\n\nImage Prompt: ${result.instagramPost.imagePrompt}`}
                 cardId="instagramPost"
                 previewData={{
@@ -245,7 +256,7 @@ export default function HomePage(): JSX.Element {
               />
               <ResultCard 
                 title={result.facebookPost.title} 
-                content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.facebookPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }} className="underline hover:opacity-80 transition-opacity">{result.facebookPost.imagePrompt}</a></p></>}
+                content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.facebookPost.imagePrompt}</p><div className="mt-3"><button onClick={() => handleGenerateImage(result.facebookPost.imagePrompt)} className="bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all text-sm px-4 py-2 rounded-md">Generate Image ✨</button></div></>}
                 copyText={`Caption: ${result.facebookPost.caption}\n\nHashtags: ${result.facebookPost.hashtags}\n\nImage Prompt: ${result.facebookPost.imagePrompt}`}
                 cardId="facebookPost"
                 previewData={{
@@ -256,7 +267,7 @@ export default function HomePage(): JSX.Element {
               />
               <ResultCard 
                 title={result.upsellPost.title} 
-                content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> <a href={`/generate-image?prompt=${encodeURIComponent(result.upsellPost.imagePrompt)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)' }} className="underline hover:opacity-80 transition-opacity">{result.upsellPost.imagePrompt}</a></p></>}
+                content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.upsellPost.imagePrompt}</p><div className="mt-3"><button onClick={() => handleGenerateImage(result.upsellPost.imagePrompt)} className="bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all text-sm px-4 py-2 rounded-md">Generate Image ✨</button></div></>}
                 copyText={`Caption: ${result.upsellPost.caption}\n\nHashtags: ${result.upsellPost.hashtags}\n\nImage Prompt: ${result.upsellPost.imagePrompt}`}
                 cardId="upsellPost"
                 previewData={{
@@ -319,6 +330,27 @@ export default function HomePage(): JSX.Element {
                 caption={previewData.caption}
               />
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Image Generator */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              style={{ backgroundColor: 'var(--card-dark)', borderColor: 'var(--border-color)' }}
+              className="absolute -top-4 -right-4 border hover:opacity-80 rounded-full w-8 h-8 flex items-center justify-center z-10 transition-opacity shadow-md"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            <div className="bg-[var(--card-dark)] rounded-lg border border-[var(--border-color)] max-h-full overflow-y-auto">
+              <ImageGenerator initialPrompt={promptForModal} />
+            </div>
           </div>
         </div>
       )}
