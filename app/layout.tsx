@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { manrope } from './fonts';
+import Sidebar from './components/Sidebar';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -14,7 +15,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={manrope.className}>{children}</body>
+      <body className={manrope.className}>
+        <div className="flex h-screen">
+          {/* Sidebar */}
+          <Sidebar />
+
+          {/* Main Content */}
+          <div className="flex-1 overflow-auto">
+            {children}
+          </div>
+        </div>
+      </body>
     </html>
   );
 } 

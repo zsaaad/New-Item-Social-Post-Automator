@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { manrope } from './fonts';
 import SocialPostPreview from './components/SocialPostPreview';
 import InstagramPreview from './components/InstagramPreview';
@@ -14,7 +14,7 @@ interface ContentPack {
   upsellPost: { title: string; caption: string; hashtags: string; imagePrompt: string };
 }
 
-export default function HomePage() {
+export default function HomePage(): JSX.Element {
   const [formData, setFormData] = useState({
     newItemName: 'Bozza (Bomboloni + Pizza)',
     itemDescription: 'Italian doughnuts served warm and filled with your choice of oozy Nutella, creamy custard, or seasonal jam—paired with a personal-sized artisanal pizza made with hand-stretched dough, tangy tomato base, and bubbling cheese. One plate. Two cravings. Fully satisfied.',
@@ -145,18 +145,19 @@ export default function HomePage() {
 
   return (
     <main style={{ color: 'var(--text-primary)' }} className="min-h-screen p-6">
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className={`text-3xl font-bold ${manrope.className}`}>Social Post Generator</h1>
+        <p style={{ color: 'var(--text-secondary)' }} className="mt-2 text-base">
+          Transform your new products into compelling social media campaigns.
+        </p>
+      </div>
+
       {/* Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Left Column - Input */}
         <div className="space-y-6">
-          <div className="text-center lg:text-left">
-            <h1 className={`text-4xl lg:text-5xl font-bold ${manrope.className}`}>Creative Studio</h1>
-            <p style={{ color: 'var(--text-secondary)' }} className="mt-3 text-lg">
-              Transform your new products into compelling social media campaigns.
-            </p>
-          </div>
-
           <form onSubmit={handleSubmit} style={{ 
             backgroundColor: 'var(--card-dark)', 
             borderColor: 'var(--border-color)' 
