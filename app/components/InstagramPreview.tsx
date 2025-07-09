@@ -1,4 +1,4 @@
-'use client';
+import React from 'react';
 
 interface InstagramPreviewProps {
   profileName: string;
@@ -19,113 +19,78 @@ export default function InstagramPreview({
       <div className="flex items-center p-3 border-b border-gray-200">
         <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center mr-3">
           <svg className="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-    <div style={{ 
-      backgroundColor: 'var(--card-dark)', 
-      borderColor: 'var(--border-color)' 
-    }} className="border rounded-lg max-w-sm mx-auto overflow-hidden shadow-[0_0_15px_var(--accent-glow)]">
-      {/* Header */}
-      <div className="flex items-center justify-between p-3">
-        <div className="flex items-center space-x-3">
-          <img
-            src={profilePicUrl}
-            alt={`${profileName} profile`}
-            className="w-8 h-8 rounded-full object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = `data:image/svg+xml;base64,${btoa(`
-                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="16" cy="16" r="16" fill="#E5E7EB"/>
-                  <circle cx="16" cy="12" r="4" fill="#9CA3AF"/>
-                  <path d="M8 26c0-4.418 3.582-8 8-8s8 3.582 8 8" fill="#9CA3AF"/>
-                </svg>
-              `)}`;
-            }}
-          />
-          <span style={{ color: 'var(--text-primary)' }} className="font-bold text-sm">{profileName}</span>
-        </div>
-        <button className="p-1 hover:opacity-70 transition-opacity">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="8" cy="2" r="1.5" fill="var(--text-secondary)"/>
-            <circle cx="8" cy="8" r="1.5" fill="var(--text-secondary)"/>
-            <circle cx="8" cy="14" r="1.5" fill="var(--text-secondary)"/>
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
-        </button>
+        </div>
+        <div className="flex-1">
+          <div className="font-semibold text-gray-800 text-sm">{profileName}</div>
+        </div>
+        <div className="text-gray-500">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+          </svg>
+        </div>
       </div>
 
       {/* Image */}
-      <div className="w-full aspect-square bg-gray-900 flex items-center justify-center">
+      <div className="aspect-square bg-gray-100 flex items-center justify-center">
         <img
           src={imageUrl}
           alt="Post content"
           className="w-full h-full object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = `data:image/svg+xml;base64,${btoa(`
-              <svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="400" height="400" fill="#1F2937"/>
-                <rect x="150" y="150" width="100" height="100" rx="8" fill="#374151"/>
-                <circle cx="170" cy="170" r="8" fill="#6B7280"/>
-                <path d="M160 190 L180 210 L220 170" stroke="#9CA3AF" stroke-width="2" fill="none"/>
-                <text x="200" y="280" text-anchor="middle" fill="#9CA3AF" font-family="system-ui" font-size="14">
-                  Image Preview
-                </text>
-              </svg>
-            `)}`;
+            target.style.display = 'none';
+            target.nextElementSibling?.classList.remove('hidden');
           }}
         />
+        <div className="hidden text-gray-500 text-center">
+          <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+          </svg>
+          <p className="text-sm">Image Preview</p>
+        </div>
       </div>
 
-      {/* Action Bar */}
-      <div className="flex items-center justify-between p-3">
-        <div className="flex items-center space-x-4">
-          {/* Heart Icon */}
-          <button className="p-1 hover:opacity-70 transition-opacity">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="var(--text-secondary)" strokeWidth="1.5" fill="none"/>
-            </svg>
-          </button>
-          
-          {/* Chat Bubble Icon */}
-          <button className="p-1 hover:opacity-70 transition-opacity">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="var(--text-secondary)" strokeWidth="1.5" fill="none"/>
-            </svg>
-          </button>
-          
-          {/* Paper Airplane Icon */}
-          <button className="p-1 hover:opacity-70 transition-opacity">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22 2L2 8.5l7.5 1.5 1.5 7.5L22 2z" stroke="var(--text-secondary)" strokeWidth="1.5" fill="none"/>
-              <path d="M11 9L22 2" stroke="var(--text-secondary)" strokeWidth="1.5" fill="none"/>
+      {/* Actions */}
+      <div className="p-3">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-800 hover:text-gray-600 transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+            <button className="text-gray-800 hover:text-gray-600 transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </button>
+            <button className="text-gray-800 hover:text-gray-600 transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </button>
+          </div>
+          <button className="text-gray-800 hover:text-gray-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
             </svg>
           </button>
         </div>
         
-        {/* Bookmark Icon */}
-        <button className="p-1 hover:opacity-70 transition-opacity">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2v16z" stroke="var(--text-secondary)" strokeWidth="1.5" fill="none"/>
-          </svg>
-        </button>
-      </div>
-
-      {/* Likes Count */}
-      <div className="px-3 pb-2">
-        <p style={{ color: 'var(--text-primary)' }} className="text-sm">
-          Liked by <span className="font-semibold">demo_user</span> and <span className="font-semibold">1,234 others</span>
-        </p>
-      </div>
-
-      {/* Caption */}
-      <div className="px-3 pb-2">
-        <p style={{ color: 'var(--text-primary)' }} className="text-sm">
-          <span className="font-bold">{profileName}</span> {caption}
-        </p>
-      </div>
-
-      {/* Timestamp */}
-      <div className="px-3 pb-3">
-        <p style={{ color: 'var(--text-secondary)' }} className="text-xs uppercase">2 HOURS AGO</p>
+        <div className="text-sm text-gray-800 font-semibold mb-2">
+          1,234 likes
+        </div>
+        
+        <div className="text-sm text-gray-800">
+          <span className="font-semibold mr-1">{profileName}</span>
+          <span className="text-gray-800">{caption}</span>
+        </div>
+        
+        <div className="text-xs text-gray-500 mt-2">
+          2 HOURS AGO
+        </div>
       </div>
     </div>
   );
