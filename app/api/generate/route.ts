@@ -49,11 +49,52 @@ export async function POST(request: NextRequest) {
     const response = result.response;
     const text = response.text();
 
-    // 6. The AI might wrap the JSON in markdown, so we need to clean it.
-    const cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    // 6. Clean and extract JSON from the AI response
+    let cleanedText = text.replace(/```json/g, "").replace(/```/g, "").trim();
     
-    // 7. Parse the cleaned text into a JSON object
-    const parsedJson = JSON.parse(cleanedText);
+    // Remove any leading/trailing text that isn't part of the JSON
+    const jsonStart = cleanedText.indexOf('{');
+    const jsonEnd = cleanedText.lastIndexOf('}');
+    
+    if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+      cleanedText = cleanedText.substring(jsonStart, jsonEnd + 1);
+    }
+    
+    // 7. Parse the cleaned text into a JSON object with error handling
+    let parsedJson;
+    try {
+      parsedJson = JSON.parse(cleanedText);
+    } catch (parseError) {
+      console.error("JSON parsing failed. Raw response:", text);
+      console.error("Cleaned text:", cleanedText);
+      console.error("Parse error:", parseError);
+      
+      // Fallback content pack if JSON parsing fails
+      parsedJson = {
+        "launchPromotion": {
+          "title": "Actionable Launch Promotion",
+          "content": `Launch ${newItemName} with a strategic promotion connecting to your bestselling ${strategicInput} for maximum impact.`
+        },
+        "instagramPost": {
+          "title": "Instagram Announcement Post",
+          "caption": `🚀 Introducing ${newItemName}! ${itemDescription.substring(0, 100)}... Now available for ${price}! #NewLaunch #FoodLover`,
+          "hashtags": "#foodie #newmenu #delicious #instafood",
+          "imagePrompt": `Professional food photography of ${newItemName} with dramatic studio lighting, appetizing composition, high-end restaurant presentation`
+        },
+        "facebookPost": {
+          "title": "Facebook Engagement Post",
+          "caption": `Exciting news! We're thrilled to introduce ${newItemName} to our menu. ${itemDescription} Available now for ${price}. What's your favorite flavor combination?`,
+          "hashtags": "#newmenu #foodexperience #community",
+          "imagePrompt": `Lifestyle photo of ${newItemName} being enjoyed in a social setting with soft natural lighting`
+        },
+        "upsellPost": {
+          "title": "Strategic Upsell Post",
+          "caption": `Perfect combo alert! Try our new ${newItemName} alongside our popular ${strategicInput} for the ultimate experience. Limited time offer!`,
+          "hashtags": "#combo #bestseller #limitedtime",
+          "imagePrompt": `Split composition showing ${newItemName} and ${strategicInput} side by side with professional food styling`
+        }
+      };
+    }
 
     // 8. Success! Return the final JSON content pack.
     return NextResponse.json(parsedJson, { status: 200 });
