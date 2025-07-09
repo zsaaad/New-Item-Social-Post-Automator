@@ -20,6 +20,7 @@ export default function HomePage() {
   const [result, setResult] = useState<ContentPack | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>({});
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -59,10 +60,30 @@ export default function HomePage() {
     }
   };
 
+  const handleCopy = async (text: string, cardId: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedStates(prev => ({ ...prev, [cardId]: true }));
+      setTimeout(() => {
+        setCopiedStates(prev => ({ ...prev, [cardId]: false }));
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
   // A small component to render the result cards
-  const ResultCard = ({ title, content }: { title: string; content: React.ReactNode }) => (
-    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-      <h3 className="font-bold text-indigo-400 mb-2">{title}</h3>
+  const ResultCard = ({ title, content, copyText, cardId }: { title: string; content: React.ReactNode; copyText: string; cardId: string }) => (
+    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative">
+      <div className="flex justify-between items-start mb-2">
+        <h3 className="font-bold text-indigo-400">{title}</h3>
+        <button
+          onClick={() => handleCopy(copyText, cardId)}
+          className="text-xs bg-gray-700 hover:bg-gray-600 text-gray-300 px-2 py-1 rounded transition-colors"
+        >
+          {copiedStates[cardId] ? 'Copied!' : 'Copy'}
+        </button>
+      </div>
       <div className="text-gray-300 whitespace-pre-wrap">{content}</div>
     </div>
   );
@@ -107,10 +128,30 @@ export default function HomePage() {
 
         {result && (
           <div className="space-y-4">
-            <ResultCard title={result.launchPromotion.title} content={result.launchPromotion.content} />
-            <ResultCard title={result.instagramPost.title} content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.instagramPost.imagePrompt}</p></>} />
-            <ResultCard title={result.facebookPost.title} content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.facebookPost.imagePrompt}</p></>} />
-            <ResultCard title={result.upsellPost.title} content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.upsellPost.imagePrompt}</p></>} />
+            <ResultCard 
+              title={result.launchPromotion.title} 
+              content={result.launchPromotion.content} 
+              copyText={result.launchPromotion.content}
+              cardId="launchPromotion"
+            />
+            <ResultCard 
+              title={result.instagramPost.title} 
+              content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.instagramPost.imagePrompt}</p></>}
+              copyText={`Caption: ${result.instagramPost.caption}\n\nHashtags: ${result.instagramPost.hashtags}\n\nImage Prompt: ${result.instagramPost.imagePrompt}`}
+              cardId="instagramPost"
+            />
+            <ResultCard 
+              title={result.facebookPost.title} 
+              content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.facebookPost.imagePrompt}</p></>}
+              copyText={`Caption: ${result.facebookPost.caption}\n\nHashtags: ${result.facebookPost.hashtags}\n\nImage Prompt: ${result.facebookPost.imagePrompt}`}
+              cardId="facebookPost"
+            />
+            <ResultCard 
+              title={result.upsellPost.title} 
+              content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.upsellPost.imagePrompt}</p></>}
+              copyText={`Caption: ${result.upsellPost.caption}\n\nHashtags: ${result.upsellPost.hashtags}\n\nImage Prompt: ${result.upsellPost.imagePrompt}`}
+              cardId="upsellPost"
+            />
           </div>
         )}
       </div>
