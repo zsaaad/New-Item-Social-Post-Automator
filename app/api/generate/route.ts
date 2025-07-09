@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
       - Price: "${price}"
       - Strategic Input (Bestselling Item): "${strategicInput}"
 
+      For all 'imagePrompt' fields, you must generate a highly detailed, photorealistic, cinematic-style prompt suitable for an AI like Midjourney. Describe the lighting (e.g., 'dramatic studio lighting', 'soft natural morning light'), the camera angle (e.g., 'low angle shot', 'macro shot'), the composition, and the background to create a visually stunning and professional-quality image concept.
+
       Generate the JSON object with this exact structure:
       {
         "launchPromotion": { "title": "Actionable Launch Promotion", "content": "..." },
