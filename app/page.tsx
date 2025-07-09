@@ -9,6 +9,10 @@ export default function Home() {
     newItemPrice: '',
     strategicInput: ''
   })
+  
+  const [isLoading, setIsLoading] = useState(false)
+  const [response, setResponse] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -18,10 +22,32 @@ export default function Home() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // TODO: Implement campaign generation logic
-    console.log('Form submitted:', formData)
+    setIsLoading(true)
+    setError(null)
+    setResponse(null)
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+
+      const data = await res.json()
+      setResponse(data.message)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -112,17 +138,41 @@ export default function Home() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+            disabled={isLoading}
+            className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
           >
-            Generate Campaign
+            {isLoading ? 'Generating...' : 'Generate Campaign'}
           </button>
         </form>
 
-        {/* Output Area (Placeholder) */}
+        {/* Output Area */}
         <div className="mt-8 bg-gray-800 rounded-lg p-6">
-          <p className="text-gray-500 text-center">
-            Your full campaign content pack will appear here...
-          </p>
+          {isLoading && (
+            <div className="text-center">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-4"></div>
+              <p className="text-gray-400">Generating your campaign...</p>
+            </div>
+          )}
+          
+          {error && (
+            <div className="text-center">
+              <p className="text-red-400 mb-2">Error:</p>
+              <p className="text-red-300">{error}</p>
+            </div>
+          )}
+          
+          {response && (
+            <div className="text-center">
+              <p className="text-green-400 mb-2">Response:</p>
+              <p className="text-white">{response}</p>
+            </div>
+          )}
+          
+          {!isLoading && !error && !response && (
+            <p className="text-gray-500 text-center">
+              Your full campaign content pack will appear here...
+            </p>
+          )}
         </div>
       </div>
     </main>
