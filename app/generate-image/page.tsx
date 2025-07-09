@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { manrope } from '../fonts';
 
@@ -11,7 +11,7 @@ export default function GenerateImagePage() {
   const [prompt, setPrompt] = useState(promptFromUrl ? decodeURIComponent(promptFromUrl) : '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [style, setStyle] = useState('Photorealistic');
   const [color, setColor] = useState('Vibrant');
   const [background, setBackground] = useState('Studio Backdrop');
@@ -26,7 +26,7 @@ export default function GenerateImagePage() {
 
     setLoading(true);
     setError(null);
-    setImageBase64(null);
+    setImageUrl(null);
 
     try {
       const response = await fetch('/api/image', {
@@ -41,7 +41,7 @@ export default function GenerateImagePage() {
         throw new Error(data.details || `HTTP error! status: ${response.status}`);
       }
 
-      setImageBase64(data.imageBase64);
+      setImageUrl(data.imageUrl);
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -55,18 +55,19 @@ export default function GenerateImagePage() {
 
   return (
     <main style={{ color: 'var(--text-primary)' }} className="min-h-screen p-6">
+      {/* Page Header */}
+      <div className="mb-8">
+        <h1 className={`text-3xl font-bold ${manrope.className}`}>AI Image Generator</h1>
+        <p style={{ color: 'var(--text-secondary)' }} className="mt-2 text-base">
+          Generate high-quality images using DALL-E 3 AI technology.
+        </p>
+      </div>
+
       {/* Two-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Left Column - Input */}
         <div className="space-y-6">
-          <div className="text-center lg:text-left">
-            <h1 className={`text-4xl lg:text-5xl font-bold ${manrope.className}`}>Image Generator</h1>
-            <p style={{ color: 'var(--text-secondary)' }} className="mt-3 text-lg">
-              Generate visual mockups for your content (Demo Mode).
-            </p>
-          </div>
-
           <form onSubmit={handleSubmit} style={{ 
             backgroundColor: 'var(--card-dark)', 
             borderColor: 'var(--border-color)' 
@@ -145,7 +146,7 @@ export default function GenerateImagePage() {
               disabled={loading}
               className="w-full bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all py-3 px-6 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Generating Image...' : 'Generate Image'}
+              {loading ? 'Generating with DALL-E 3...' : 'Generate Image'}
             </button>
           </form>
         </div>
@@ -165,32 +166,45 @@ export default function GenerateImagePage() {
               color: 'var(--text-primary)'
             }} className="border p-8 rounded-md text-center shadow-[0_0_20px_var(--accent-glow)]">
               <div style={{ borderColor: 'var(--accent-primary)' }} className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 mb-4"></div>
-              <p className="text-lg font-medium">Creating visual mockup...</p>
-              <p style={{ color: 'var(--text-secondary)' }} className="text-sm mt-2">This may take a moment</p>
+              <p className="text-lg font-medium">Creating AI-generated image...</p>
+              <p style={{ color: 'var(--text-secondary)' }} className="text-sm mt-2">Powered by DALL-E 3</p>
             </div>
           )}
 
-          {imageBase64 ? (
+          {imageUrl ? (
             <div style={{ 
               backgroundColor: 'var(--card-dark)', 
               borderColor: 'var(--border-color)' 
             }} className="border rounded-md p-6 shadow-[0_0_20px_var(--accent-glow)]">
-              <h3 style={{ color: 'var(--accent-primary)' }} className="text-xl font-bold mb-4">Generated Image</h3>
+              <h3 style={{ color: 'var(--accent-primary)' }} className="text-xl font-bold mb-4">AI Generated Image</h3>
               <img
-                src={`data:image/svg+xml;base64,${imageBase64}`}
-                alt="Generated mockup"
+                src={imageUrl}
+                alt="AI generated image"
                 className="w-full h-auto rounded-md shadow-lg"
               />
+              <div className="mt-4 text-center">
+                <a 
+                  href={imageUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center space-x-2 bg-[var(--accent-primary)] text-white font-bold hover:bg-orange-600 transition-all px-4 py-2 rounded-md text-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Download Full Resolution</span>
+                </a>
+              </div>
             </div>
           ) : (
             <div style={{ 
               backgroundColor: 'var(--card-dark)', 
               borderColor: 'var(--border-color)' 
             }} className="border rounded-md p-8 text-center shadow-[0_0_20px_var(--accent-glow)]">
-              <div className="text-6xl mb-4">🎨</div>
-              <h3 style={{ color: 'var(--text-primary)' }} className="text-xl font-bold mb-2">Your Generated Image</h3>
+              <div className="text-6xl mb-4">🤖</div>
+              <h3 style={{ color: 'var(--text-primary)' }} className="text-xl font-bold mb-2">AI Generated Images</h3>
               <p style={{ color: 'var(--text-secondary)' }} className="text-sm">
-                Visual mockups will appear here after generation
+                High-quality images powered by DALL-E 3 will appear here
               </p>
             </div>
           )}

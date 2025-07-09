@@ -1,59 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize OpenAI client
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    // Get and validate the prompt from request body
     const { prompt, style, color, background } = await request.json();
     
-    // Validate required fields
     if (!prompt) {
       throw new Error("Prompt is required in the request body.");
     }
-    if (!style) {
-      throw new Error("Style is required in the request body.");
-    }
-    if (!color) {
-      throw new Error("Color is required in the request body.");
-    }
-    if (!background) {
-      throw new Error("Background is required in the request body.");
+
+    // Create enhanced prompt that includes style parameters
+    const enhancedPrompt = `${prompt}. Style: ${style || 'Photorealistic'}. Dominant Color Palette: ${color || 'Vibrant'}. Background: ${background || 'Studio Backdrop'}.`;
+
+    // Call DALL-E 3 API
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: enhancedPrompt,
+      n: 1,
+      size: "1024x1024",
+    });
+
+    // Extract the image URL from the response
+    const imageUrl = response.data[0].url;
+
+    if (!imageUrl) {
+      throw new Error("No image URL received from OpenAI API.");
     }
 
-    // Create a dynamic prompt that includes the style parameters
-    const enhancedPrompt = `${prompt}. Style: ${style}. Dominant Color Palette: ${color}. Background: ${background}.`;
-    
-    // For now, we'll generate a placeholder image with the enhanced prompt text
-    // This ensures the image generation feature works while we set up proper image APIs
-    const placeholderSvg = `
-      <svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grad)"/>
-        <rect x="20" y="20" width="472" height="472" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="2" rx="20"/>
-        <text x="256" y="200" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="bold">🎨 Image Generated</text>
-        <text x="256" y="230" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif" font-size="16">Enhanced Prompt:</text>
-        <foreignObject x="40" y="250" width="432" height="220">
-          <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: Arial, sans-serif; font-size: 12px; color: rgba(255,255,255,0.8); text-align: center; line-height: 1.4; padding: 15px; word-wrap: break-word;">
-            ${enhancedPrompt.substring(0, 300)}${enhancedPrompt.length > 300 ? '...' : ''}
-          </div>
-        </foreignObject>
-      </svg>
-    `;
-
-    // Convert SVG to base64
-    const imageBase64 = Buffer.from(placeholderSvg).toString('base64');
-
-    return NextResponse.json({ imageBase64: imageBase64 }, { status: 200 });
+    // Return JSON response with the real image URL
+    return NextResponse.json({ imageUrl: imageUrl }, { status: 200 });
 
   } catch (error) {
-    console.error("--- IMAGE GENERATION ERROR ---", error);
+    console.error("--- DALL-E 3 IMAGE GENERATION ERROR ---", error);
+    
     let errorMessage = "An unknown error occurred.";
     if (error instanceof Error) {
-        errorMessage = error.message;
+      errorMessage = error.message;
     }
-    return NextResponse.json({ error: "Failed to generate image.", details: errorMessage }, { status: 500 });
+    
+    // Handle specific OpenAI API errors
+    if (error && typeof error === 'object' && 'status' in error) {
+      const status = (error as any).status;
+      if (status === 401) {
+        errorMessage = "Invalid OpenAI API key. Please check your OPENAI_API_KEY environment variable.";
+      } else if (status === 429) {
+        errorMessage = "OpenAI API rate limit exceeded. Please try again later.";
+      } else if (status === 400) {
+        errorMessage = "Invalid prompt or parameters sent to OpenAI API.";
+      }
+    }
+    
+    return NextResponse.json({ 
+      error: "Failed to generate image with DALL-E 3.", 
+      details: errorMessage 
+    }, { status: 500 });
   }
 } 
