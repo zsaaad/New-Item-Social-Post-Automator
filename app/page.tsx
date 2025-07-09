@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { playfairDisplay } from './layout';
 
 // Define a type for the structure of the AI's response for type safety
 interface ContentPack {
@@ -92,7 +93,7 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 text-white">
       <div className="w-full max-w-2xl space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl sm:text-4xl font-bold">Strategic Post Generator</h1>
+          <h1 className={`text-3xl sm:text-4xl font-bold ${playfairDisplay.className}`}>Strategic Post Generator</h1>
           <p className="text-gray-400 mt-2">
             Transform your new products into compelling social media campaigns.
           </p>
