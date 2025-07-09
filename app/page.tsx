@@ -13,9 +13,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [response, setResponse] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
-  
-  // Debug state changes
-  console.log('Current state:', { isLoading, response, error })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -27,7 +24,6 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted!', formData)
     setIsLoading(true)
     setError(null)
     setResponse(null)
@@ -46,14 +42,10 @@ export default function Home() {
       }
 
       const data = await res.json()
-      console.log('API Response:', data)
-      console.log('Setting response to:', data.message)
       setResponse(data.message)
     } catch (err) {
-      console.error('API Error:', err)
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      console.log('Setting isLoading to false')
       setIsLoading(false)
     }
   }
@@ -72,7 +64,7 @@ export default function Home() {
         </div>
 
         {/* Input Form */}
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 mb-8" onInvalid={() => console.log('Form validation failed!')}>
+        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 mb-8">
           <div className="space-y-4">
             {/* New Item Name */}
             <div>
@@ -147,7 +139,6 @@ export default function Home() {
           <button
             type="submit"
             disabled={isLoading}
-            onClick={() => console.log('Button clicked!')}
             className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
           >
             {isLoading ? 'Generating...' : 'Generate Campaign'}
