@@ -26,8 +26,12 @@ export async function POST(request: NextRequest) {
       size: "1024x1024",
     });
 
-    // Extract the image URL from the response
-    const imageUrl = response.data[0].url;
+    // Extract the image URL from the response with proper null checking
+    if (!response.data || response.data.length === 0) {
+      throw new Error("No image data received from OpenAI API.");
+    }
+
+    const imageUrl = response.data[0]?.url;
 
     if (!imageUrl) {
       throw new Error("No image URL received from OpenAI API.");
