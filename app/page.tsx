@@ -1,273 +1,119 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 
-export default function Home() {
+// Define a type for the structure of the AI's response for type safety
+interface ContentPack {
+  launchPromotion: { title: string; content: string };
+  instagramPost: { title: string; caption: string; hashtags: string; imagePrompt: string };
+  facebookPost: { title: string; caption: string; hashtags: string; imagePrompt: string };
+  upsellPost: { title: string; caption: string; hashtags: string; imagePrompt: string };
+}
+
+export default function HomePage() {
   const [formData, setFormData] = useState({
-    newItemName: '',
-    newItemDescription: '',
-    newItemPrice: '',
-    strategicInput: ''
-  })
-  
-  const [isLoading, setIsLoading] = useState(false)
-  const [contentPack, setContentPack] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
+    newItemName: 'Bozza (Bomboloni + Pizza)',
+    itemDescription: 'Italian doughnuts served warm and filled with your choice of oozy Nutella, creamy custard, or seasonal jam—paired with a personal-sized artisanal pizza made with hand-stretched dough, tangy tomato base, and bubbling cheese. One plate. Two cravings. Fully satisfied.',
+    price: 'RM22.90 (Set: 1 Bomboloni + 1 Personal Pizza)',
+    strategicInput: 'Bestselling Potential: Highly Instagrammable + fusion novelty = viral app'
+  });
+  const [result, setResult] = useState<ContentPack | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError(null)
-    setContentPack(null)
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setResult(null);
 
     try {
-      const res = await fetch('/api/generate', {
+      const response = await fetch('/api/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        // The body uses the EXACT key names the API expects
         body: JSON.stringify(formData),
-      })
+      });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`)
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Use the error message from our API's JSON response
+        throw new Error(data.details || `HTTP error! status: ${response.status}`);
       }
 
-      const data = await res.json()
-      console.log('Full API response:', data)
-      
-      // Check if there's an error in the response
-      if (data.error) {
-        console.error('API returned error:', data.error)
-        throw new Error(data.error)
+      setResult(data);
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError('An unknown error occurred.');
       }
-      
-      // Set the complete content pack
-      console.log('Setting content pack:', data)
-      setContentPack(data)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  // A small component to render the result cards
+  const ResultCard = ({ title, content }: { title: string; content: React.ReactNode }) => (
+    <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+      <h3 className="font-bold text-indigo-400 mb-2">{title}</h3>
+      <div className="text-gray-300 whitespace-pre-wrap">{content}</div>
+    </div>
+  );
 
   return (
-    <main className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full px-6 py-8">
-        {/* Header Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Strategic Post Generator
-          </h1>
-          <p className="text-gray-300 text-lg">
-            Transform your new products into compelling social media campaigns using proven bestseller strategies
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-gray-900 text-white">
+      <div className="w-full max-w-2xl space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl sm:text-4xl font-bold">Strategic Post Generator</h1>
+          <p className="text-gray-400 mt-2">
+            Transform your new products into compelling social media campaigns.
           </p>
         </div>
 
-        {/* Input Form */}
-        <form onSubmit={handleSubmit} className="bg-gray-800 rounded-lg p-6 mb-8">
-          <div className="space-y-4">
-            {/* New Item Name */}
-            <div>
-              <label htmlFor="newItemName" className="block text-gray-300 text-sm font-medium mb-2">
-                New Item Name
-              </label>
-              <input
-                type="text"
-                id="newItemName"
-                name="newItemName"
-                value={formData.newItemName}
-                onChange={handleInputChange}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter your new product name"
-                required
-              />
-            </div>
-
-            {/* New Item Description */}
-            <div>
-              <label htmlFor="newItemDescription" className="block text-gray-300 text-sm font-medium mb-2">
-                New Item Description
-              </label>
-              <textarea
-                id="newItemDescription"
-                name="newItemDescription"
-                value={formData.newItemDescription}
-                onChange={handleInputChange}
-                rows={4}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-vertical"
-                placeholder="Describe your new product in detail..."
-                required
-              />
-            </div>
-
-            {/* New Item Price */}
-            <div>
-              <label htmlFor="newItemPrice" className="block text-gray-300 text-sm font-medium mb-2">
-                New Item Price
-              </label>
-              <input
-                type="text"
-                id="newItemPrice"
-                name="newItemPrice"
-                value={formData.newItemPrice}
-                onChange={handleInputChange}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="e.g., $29.99"
-                required
-              />
-            </div>
-
-            {/* Strategic Input (Bestselling Item) */}
-            <div>
-              <label htmlFor="strategicInput" className="block text-gray-300 text-sm font-medium mb-2">
-                Strategic Input (Bestselling Item)
-              </label>
-              <input
-                type="text"
-                id="strategicInput"
-                name="strategicInput"
-                value={formData.strategicInput}
-                onChange={handleInputChange}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter your bestselling product to model success"
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="bg-gray-800/50 p-6 rounded-xl shadow-lg space-y-4 border border-gray-700">
+          <div>
+            <label htmlFor="newItemName" className="block text-sm font-medium text-gray-300 mb-1">New Item Name</label>
+            <input type="text" name="newItemName" id="newItemName" value={formData.newItemName} onChange={handleInputChange} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"/>
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 disabled:cursor-not-allowed text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800"
-          >
-            {isLoading ? 'Generating...' : 'Generate Campaign'}
+          <div>
+            <label htmlFor="itemDescription" className="block text-sm font-medium text-gray-300 mb-1">New Item Description</label>
+            <textarea name="itemDescription" id="itemDescription" value={formData.itemDescription} onChange={handleInputChange} rows={4} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"/>
+          </div>
+          <div>
+            <label htmlFor="price" className="block text-sm font-medium text-gray-300 mb-1">New Item Price</label>
+            <input type="text" name="price" id="price" value={formData.price} onChange={handleInputChange} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"/>
+          </div>
+          <div>
+            <label htmlFor="strategicInput" className="block text-sm font-medium text-gray-300 mb-1">Strategic Input (Bestselling Item)</label>
+            <input type="text" name="strategicInput" id="strategicInput" value={formData.strategicInput} onChange={handleInputChange} className="w-full bg-gray-700 border-gray-600 rounded-md p-2 focus:ring-indigo-500 focus:border-indigo-500"/>
+          </div>
+          <button type="submit" disabled={loading} className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-md disabled:bg-gray-500 transition-colors">
+            {loading ? 'Generating...' : 'Generate Campaign'}
           </button>
         </form>
 
-        {/* Output Area */}
-        <div className="mt-8">
-          {isLoading && (
-            <div className="bg-gray-800 rounded-lg p-6">
-              <div className="text-center">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-4"></div>
-                <p className="text-gray-400">Generating your strategic content pack...</p>
-              </div>
-            </div>
-          )}
-          
-          {error && (
-            <div className="bg-gray-800 rounded-lg p-6">
-              <div className="text-center">
-                <p className="text-red-400 mb-2">Error:</p>
-                <p className="text-red-300">{error}</p>
-              </div>
-            </div>
-          )}
-          
-          {contentPack && (
-            <div className="space-y-6">
-              <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold text-white mb-2">🎯 Strategic Content Pack</h2>
-                <p className="text-gray-300">Complete campaign content for {formData.newItemName}</p>
-              </div>
-              
-              {/* Launch Promotion Card */}
-              <div className="bg-gradient-to-r from-purple-800 to-indigo-800 rounded-lg p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 bg-purple-400 rounded-full mr-3"></div>
-                  <h3 className="text-xl font-semibold text-white">{contentPack.launchPromotion?.title}</h3>
-                </div>
-                <p className="text-gray-100 text-lg font-medium">{contentPack.launchPromotion?.content}</p>
-              </div>
-              
-              {/* Instagram Post Card */}
-              <div className="bg-gradient-to-r from-pink-800 to-purple-800 rounded-lg p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 bg-pink-400 rounded-full mr-3"></div>
-                  <h3 className="text-xl font-semibold text-white">{contentPack.instagramPost?.title}</h3>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Caption:</p>
-                    <p className="text-white">{contentPack.instagramPost?.caption}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Hashtags:</p>
-                    <p className="text-blue-300">{contentPack.instagramPost?.hashtags}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Image AI Prompt:</p>
-                    <p className="text-gray-100 italic">{contentPack.instagramPost?.imagePrompt}</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Facebook Post Card */}
-              <div className="bg-gradient-to-r from-blue-800 to-cyan-800 rounded-lg p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 bg-blue-400 rounded-full mr-3"></div>
-                  <h3 className="text-xl font-semibold text-white">{contentPack.facebookPost?.title}</h3>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Caption:</p>
-                    <p className="text-white">{contentPack.facebookPost?.caption}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Hashtags:</p>
-                    <p className="text-blue-300">{contentPack.facebookPost?.hashtags}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Image AI Prompt:</p>
-                    <p className="text-gray-100 italic">{contentPack.facebookPost?.imagePrompt}</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Strategic Upsell Post Card */}
-              <div className="bg-gradient-to-r from-green-800 to-teal-800 rounded-lg p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-3 h-3 bg-green-400 rounded-full mr-3"></div>
-                  <h3 className="text-xl font-semibold text-white">{contentPack.upsellPost?.title}</h3>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Caption:</p>
-                    <p className="text-white">{contentPack.upsellPost?.caption}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Hashtags:</p>
-                    <p className="text-blue-300">{contentPack.upsellPost?.hashtags}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-300 mb-2">Image AI Prompt:</p>
-                    <p className="text-gray-100 italic">{contentPack.upsellPost?.imagePrompt}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {!isLoading && !error && !contentPack && (
-            <div className="bg-gray-800 rounded-lg p-6">
-              <p className="text-gray-500 text-center">
-                Your strategic content pack will appear here...
-              </p>
-            </div>
-          )}
-        </div>
+        {error && (
+          <div className="bg-red-900/50 border border-red-700 text-red-300 p-4 rounded-md">
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
+        {result && (
+          <div className="space-y-4">
+            <ResultCard title={result.launchPromotion.title} content={result.launchPromotion.content} />
+            <ResultCard title={result.instagramPost.title} content={<><p><strong>Caption:</strong> {result.instagramPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.instagramPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.instagramPost.imagePrompt}</p></>} />
+            <ResultCard title={result.facebookPost.title} content={<><p><strong>Caption:</strong> {result.facebookPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.facebookPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.facebookPost.imagePrompt}</p></>} />
+            <ResultCard title={result.upsellPost.title} content={<><p><strong>Caption:</strong> {result.upsellPost.caption}</p><p className="mt-2"><strong>Hashtags:</strong> {result.upsellPost.hashtags}</p><p className="mt-2"><strong>Image Prompt:</strong> {result.upsellPost.imagePrompt}</p></>} />
+          </div>
+        )}
       </div>
     </main>
-  )
+  );
 } 
