@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Initialize Google AI client
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '')
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,21 +26,15 @@ export async function POST(request: NextRequest) {
     // Create the prompt
     const prompt = `You are a social media assistant. Write a short, exciting tweet for a new product called "${newItemName}". The description is: "${newItemDescription}".`
     
-    // Call GPT-4o model
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "user",
-          content: prompt
-        }
-      ],
-      max_tokens: 200,
-      temperature: 0.7
-    })
+    // Get the Gemini model
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" })
     
-    // Extract the AI response
-    const aiResponse = completion.choices[0]?.message?.content || 'No response generated'
+    // Call Gemini model
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    
+    // Extract the text from the response
+    const aiResponse = response.text() || 'No response generated'
     
     // Return the AI's text response
     return NextResponse.json({ 
@@ -51,10 +43,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error processing request:', error)
     
-    // Handle OpenAI API errors specifically
+    // Handle Google AI API errors specifically
     if (error instanceof Error && error.message.includes('API key')) {
       return NextResponse.json(
-        { error: 'OpenAI API key not configured' },
+        { error: 'Google API key not configured' },
         { status: 500 }
       )
     }
