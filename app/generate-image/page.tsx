@@ -51,7 +51,7 @@ export default function GenerateImagePage() {
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold">Image Generation Engine</h1>
           <p className="text-gray-400 mt-2">
-            Generate stunning images using Google's Imagen AI technology.
+            Generate visual mockups for your content (Demo Mode).
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export default function GenerateImagePage() {
         {loading && (
           <div className="bg-gray-800/50 border border-gray-700 text-gray-300 p-6 rounded-md text-center">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-4"></div>
-            <p>Generating image, this can take up to 30 seconds...</p>
+            <p>Creating visual mockup for your prompt...</p>
           </div>
         )}
 
@@ -96,10 +96,10 @@ export default function GenerateImagePage() {
 
         {imageBase64 && (
           <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-indigo-400 mb-4">Generated Image</h3>
+            <h3 className="text-lg font-semibold text-indigo-400 mb-4">Visual Mockup</h3>
             <img
-              src={`data:image/png;base64,${imageBase64}`}
-              alt="Generated image"
+              src={`data:image/svg+xml;base64,${imageBase64}`}
+              alt="Visual mockup"
               className="w-full h-auto rounded-lg shadow-lg max-w-full"
             />
           </div>
