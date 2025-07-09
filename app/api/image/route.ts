@@ -44,13 +44,31 @@ export async function POST(request: NextRequest) {
     console.error("--- IMAGE GENERATION ERROR ---", error);
     
     let errorMessage = "An unknown error occurred during image generation.";
+    let statusCode = 500;
+    
     if (error instanceof Error) {
       errorMessage = error.message;
+      
+      // Check for OpenAI specific errors
+      if (error.message.includes('400')) {
+        statusCode = 400;
+        errorMessage = "Bad request - check your prompt and API key. Common issues: prompt too long, content policy violation, or insufficient credits.";
+      } else if (error.message.includes('401')) {
+        statusCode = 401;
+        errorMessage = "Invalid API key. Please check your OpenAI API key configuration.";
+      } else if (error.message.includes('429')) {
+        statusCode = 429;
+        errorMessage = "Rate limit exceeded or insufficient credits. Please check your OpenAI account balance.";
+      }
     }
     
     return NextResponse.json(
-      { error: "Failed to generate image.", details: errorMessage },
-      { status: 500 }
+      { 
+        error: "Failed to generate image.", 
+        details: errorMessage,
+        fullError: error instanceof Error ? error.message : String(error)
+      },
+      { status: statusCode }
     );
   }
 } 
