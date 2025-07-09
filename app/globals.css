@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities; 
+@tailwind utilities;
+
+/* F&B Background Image with Overlay */
+body {
+  background-image: url('https://images.unsplash.com/photo-1511920183353-3C4e3535915a');
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Dark overlay for text readability */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(17, 24, 39, 0.8);
+  pointer-events: none;
+  z-index: -1;
+} 
