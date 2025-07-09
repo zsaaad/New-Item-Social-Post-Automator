@@ -6,7 +6,7 @@ export default function GenerateImagePage() {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageBase64, setImageBase64] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +18,7 @@ export default function GenerateImagePage() {
 
     setLoading(true);
     setError(null);
-    setImageUrl(null);
+    setImageBase64(null);
 
     try {
       const response = await fetch('/api/image', {
@@ -33,7 +33,7 @@ export default function GenerateImagePage() {
         throw new Error(data.details || `HTTP error! status: ${response.status}`);
       }
 
-      setImageUrl(data.imageUrl);
+      setImageBase64(data.imageBase64);
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -51,7 +51,7 @@ export default function GenerateImagePage() {
         <div className="text-center">
           <h1 className="text-3xl sm:text-4xl font-bold">Image Generation Engine</h1>
           <p className="text-gray-400 mt-2">
-            Generate stunning images using DALL-E 3 AI technology.
+            Generate stunning images using Google's Imagen AI technology.
           </p>
         </div>
 
@@ -94,11 +94,11 @@ export default function GenerateImagePage() {
           </div>
         )}
 
-        {imageUrl && (
+        {imageBase64 && (
           <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-indigo-400 mb-4">Generated Image</h3>
             <img
-              src={imageUrl}
+              src={`data:image/png;base64,${imageBase64}`}
               alt="Generated image"
               className="w-full h-auto rounded-lg shadow-lg max-w-full"
             />

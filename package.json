@@ -12,8 +12,7 @@
     "react": "^18",
     "react-dom": "^18",
     "next": "14.0.3",
-    "@google/generative-ai": "^0.11.4",
-    "openai": "^4.0.0"
+    "@google/generative-ai": "^0.11.4"
   },
   "devDependencies": {
     "typescript": "^5",
