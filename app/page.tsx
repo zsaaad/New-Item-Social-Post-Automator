@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { playfairDisplay } from './fonts';
 import SocialPostPreview from './components/SocialPostPreview';
+import InstagramPreview from './components/InstagramPreview';
+import FacebookPreview from './components/FacebookPreview';
 
 // Define a type for the structure of the AI's response for type safety
 interface ContentPack {
@@ -29,6 +31,7 @@ export default function HomePage() {
     profilePicUrl: string;
     imageUrl: string;
     caption: string;
+    postType: 'instagram' | 'facebook' | 'generic';
   } | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -81,7 +84,7 @@ export default function HomePage() {
     }
   };
 
-  const handlePreview = (caption: string, imagePrompt: string) => {
+  const handlePreview = (caption: string, imagePrompt: string, postType: 'instagram' | 'facebook' | 'generic' = 'generic') => {
     // Create a simple SVG placeholder with the image prompt text
     const svgContent = `
       <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
@@ -99,7 +102,8 @@ export default function HomePage() {
       profileName: "Your Cafe Name",
       profilePicUrl: "/logo.png",
       imageUrl: imageUrl,
-      caption: caption
+      caption: caption,
+      postType: postType
     });
     setIsPreviewOpen(true);
   };
@@ -110,7 +114,7 @@ export default function HomePage() {
     content: React.ReactNode; 
     copyText: string; 
     cardId: string;
-    previewData?: { caption: string; imagePrompt: string } 
+    previewData?: { caption: string; imagePrompt: string; postType?: 'instagram' | 'facebook' | 'generic' } 
   }) => (
     <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 relative">
       <div className="flex justify-between items-start mb-2">
@@ -118,7 +122,7 @@ export default function HomePage() {
         <div className="flex space-x-2">
           {previewData && (
             <button
-              onClick={() => handlePreview(previewData.caption, previewData.imagePrompt)}
+              onClick={() => handlePreview(previewData.caption, previewData.imagePrompt, previewData.postType)}
               className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-2 py-1 rounded transition-colors"
             >
               Preview ✨
@@ -189,7 +193,8 @@ export default function HomePage() {
               cardId="instagramPost"
               previewData={{
                 caption: `${result.instagramPost.caption} ${result.instagramPost.hashtags}`,
-                imagePrompt: result.instagramPost.imagePrompt
+                imagePrompt: result.instagramPost.imagePrompt,
+                postType: 'instagram'
               }}
             />
             <ResultCard 
@@ -199,7 +204,8 @@ export default function HomePage() {
               cardId="facebookPost"
               previewData={{
                 caption: `${result.facebookPost.caption} ${result.facebookPost.hashtags}`,
-                imagePrompt: result.facebookPost.imagePrompt
+                imagePrompt: result.facebookPost.imagePrompt,
+                postType: 'facebook'
               }}
             />
             <ResultCard 
@@ -209,7 +215,8 @@ export default function HomePage() {
               cardId="upsellPost"
               previewData={{
                 caption: `${result.upsellPost.caption} ${result.upsellPost.hashtags}`,
-                imagePrompt: result.upsellPost.imagePrompt
+                imagePrompt: result.upsellPost.imagePrompt,
+                postType: 'instagram'
               }}
             />
           </div>
@@ -230,13 +237,31 @@ export default function HomePage() {
               </svg>
             </button>
             
-            {/* Social Post Preview */}
-            <SocialPostPreview
-              profileName={previewData.profileName}
-              profilePicUrl={previewData.profilePicUrl}
-              imageUrl={previewData.imageUrl}
-              caption={previewData.caption}
-            />
+            {/* Platform-Specific Social Post Preview */}
+            {previewData.postType === 'instagram' && (
+              <InstagramPreview
+                profileName={previewData.profileName}
+                profilePicUrl={previewData.profilePicUrl}
+                imageUrl={previewData.imageUrl}
+                caption={previewData.caption}
+              />
+            )}
+            {previewData.postType === 'facebook' && (
+              <FacebookPreview
+                profileName={previewData.profileName}
+                profilePicUrl={previewData.profilePicUrl}
+                imageUrl={previewData.imageUrl}
+                caption={previewData.caption}
+              />
+            )}
+            {previewData.postType === 'generic' && (
+              <SocialPostPreview
+                profileName={previewData.profileName}
+                profilePicUrl={previewData.profilePicUrl}
+                imageUrl={previewData.imageUrl}
+                caption={previewData.caption}
+              />
+            )}
           </div>
         </div>
       )}
