@@ -1,15 +1,6 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { inter } from './fonts'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
-const playfairDisplay = Playfair_Display({ 
-  weight: '700',
-  subsets: ['latin'] 
-})
-
-// Export for use in other components
-export { playfairDisplay }
 
 export const metadata: Metadata = {
   title: 'Strategic Post Generator',

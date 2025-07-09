@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { playfairDisplay } from './layout';
+import { playfairDisplay } from './fonts';
 
 // Define a type for the structure of the AI's response for type safety
 interface ContentPack {
