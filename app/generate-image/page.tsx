@@ -12,6 +12,9 @@ export default function GenerateImagePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [style, setStyle] = useState('Photorealistic');
+  const [color, setColor] = useState('Vibrant');
+  const [background, setBackground] = useState('Studio Backdrop');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,7 +32,7 @@ export default function GenerateImagePage() {
       const response = await fetch('/api/image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
+        body: JSON.stringify({ prompt, style, color, background }),
       });
 
       const data = await response.json();
@@ -75,6 +78,59 @@ export default function GenerateImagePage() {
               placeholder="Describe the image you want to generate..."
               required
             />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="style" className="block text-sm font-medium text-gray-300 mb-2">
+                Style
+              </label>
+              <select
+                id="style"
+                value={style}
+                onChange={(e) => setStyle(e.target.value)}
+                className="w-full bg-gray-700 border-gray-600 rounded-md p-3 focus:ring-amber-500 focus:border-amber-500 text-white"
+              >
+                <option value="Photorealistic">Photorealistic</option>
+                <option value="Illustration">Illustration</option>
+                <option value="Fantasy Art">Fantasy Art</option>
+                <option value="Anime">Anime</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="color" className="block text-sm font-medium text-gray-300 mb-2">
+                Color
+              </label>
+              <select
+                id="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="w-full bg-gray-700 border-gray-600 rounded-md p-3 focus:ring-amber-500 focus:border-amber-500 text-white"
+              >
+                <option value="Vibrant">Vibrant</option>
+                <option value="Muted Tones">Muted Tones</option>
+                <option value="Monochromatic">Monochromatic</option>
+                <option value="Warm Palette">Warm Palette</option>
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="background" className="block text-sm font-medium text-gray-300 mb-2">
+                Background
+              </label>
+              <select
+                id="background"
+                value={background}
+                onChange={(e) => setBackground(e.target.value)}
+                className="w-full bg-gray-700 border-gray-600 rounded-md p-3 focus:ring-amber-500 focus:border-amber-500 text-white"
+              >
+                <option value="Studio Backdrop">Studio Backdrop</option>
+                <option value="Outdoor Scenery">Outdoor Scenery</option>
+                <option value="Abstract Texture">Abstract Texture</option>
+                <option value="Wooden Table">Wooden Table</option>
+              </select>
+            </div>
           </div>
           
           <button
